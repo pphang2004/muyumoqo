@@ -1,0 +1,107 @@
+---
+title: "About This Project"
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+
+# The Muyumoqo Archaeological Project
+
+## Project Overview
+
+**Muyumoqo** is an archaeological excavation project focused on analyzing lithic (stone tool) assemblages and obsidian artifacts. This research helps us understand:
+
+- How ancient peoples used and manufactured tools
+- Settlement patterns and site use over time
+- Trade networks through obsidian sourcing
+- Cultural practices through tool types and distributions
+
+## The Data
+
+### What We Collected
+
+Our excavation generated data in several forms:
+
+1. **Lithic Analysis Data** - Detailed measurements and classifications of stone tools
+2. **Obsidian Data** - Specific information about obsidian artifacts from excavation units
+3. **Contextual Information** - Where artifacts were found, at what depth, in which excavation units
+
+### Data Files
+
+- `lithic_analysis(analysis).csv` - Stone tool measurements and attributes
+- `obsidian_data_26(UNITS 8A 8B).csv` - Obsidian artifacts from Units 8A and 8B
+- `2023_muyumoqo fichas - UE5.csv` - Field documentation from Unit 5
+
+## How to Use This Site
+
+### For Learning Data Analysis
+
+If you're new to data analysis, we recommend:
+
+1. Start with the **Home** page for an overview
+2. Read the **Data Overview** section to understand what information we have
+3. Follow the analyses in order - each builds on previous concepts
+4. Read the explanations carefully - code is explained in plain language
+
+### For Understanding the Methods
+
+Each analysis page includes:
+
+- **The Question** - What are we trying to learn?
+- **The Method** - How do we analyze the data?
+- **The Code** - The actual R code (don't worry if it looks intimidating!)
+- **The Results** - What did we discover?
+
+### For Reproducing This Work
+
+All code and data are available here. You can:
+
+- Download the data files
+- Run the analyses yourself in R
+- Modify the code to ask new questions
+- Learn by experimenting!
+
+## Technologies Used
+
+This project uses:
+
+- **R** - A statistical programming language (free and open-source)
+- **workflowr** - A tool that organizes research projects for reproducibility
+- **renv** - Manages R package dependencies to ensure reproducibility
+- **RMarkdown** - Combines text explanations with executable R code
+
+No special tools needed to read this site - just a web browser!
+
+## About Reproducibility
+
+A key principle of this project is **reproducibility**: anyone with the same data should be able to recreate these results exactly. We use `renv` to track package versions and `workflowr` to document the process clearly.
+
+## Getting Started with R (For Beginners)
+
+If you want to run this analysis yourself:
+
+### Step 1: Install R and RStudio
+- Download R from https://www.r-project.org/
+- Download RStudio (the free version) from https://posit.co/download/rstudio-desktop/
+
+### Step 2: Clone or Download This Project
+Download the entire project folder to your computer.
+
+### Step 3: Open the Project
+Open `Archaeology.Rproj` in RStudio. This sets up your working environment.
+
+### Step 4: Restore the Packages
+In the RStudio console, type:
+```r
+renv::restore()
+```
+This installs all the R packages needed, with the exact versions we used.
+
+### Step 5: Open the Analysis Files
+In the `analysis/` folder, open any `.Rmd` file and click "Knit" to run the analysis!
+
+## Questions or Feedback?
+
+This is a learning project! If something is unclear, that's valuable feedback. Consider opening an issue or contacting the project maintainers.
