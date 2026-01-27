@@ -7,8 +7,6 @@ navbar:
     href: index.html
   - text: About
     href: about.html
-  - text: Lithic Analysis
-    href: lithic_overview.html
   - text: License
     href: license.html
 output:
