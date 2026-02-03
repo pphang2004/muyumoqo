@@ -1,0 +1,395 @@
+---
+title: "Data Inventory & Structure"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+    toc_depth: 2
+editor_options:
+  chunk_output_type: console
+---
+
+# Overview
+
+This document provides a comprehensive inventory of all data files in the Muyumoqo Archaeological Project, including their structure, categories, and sample records. This reference ensures consistent data understanding across all analyses and collaborations.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(readxl)
+library(readr)
+library(dplyr)
+library(knitr)
+```
+
+---
+
+# 1. Obsidian Geochemical Analysis
+
+## File Information
+- **Filename:** `obsidian_data_26.xlsx`
+- **Size:** 1.2 MB
+- **Type:** Multi-sheet Excel workbook
+- **Content:** XRF (X-Ray Fluorescence) geochemical analysis of obsidian artifacts and source samples
+
+## Sheet Descriptions
+
+### 1.1 Artifacts raw
+- **Purpose:** Raw XRF analysis data for obsidian artifacts from the site
+- **Rows:** 326 artifacts
+- **Columns:** 37 (analysis parameters + elemental composition data)
+- **Key Variables:**
+  - `File #`, `Name` (Muyumoqo), `ID`: Artifact identification
+  - `DateTime`, `Operator`: Analysis metadata
+  - `Alloy 1/2/3`, `Match Qual 1/2/3`: Geochemical matching to sources
+  - Elemental composition with error values: `Mn`, `Fe`, `Zn`, `Ga`, `Rb`, `Sr`, `Y`, `Zr`, `Nb`, `Th`
+- **Purpose:** Elemental fingerprinting for source provenance determination
+
+### 1.2 Artifacts and sources
+- **Purpose:** Combined dataset with artifacts and geological source samples
+- **Rows:** 897 samples
+- **Columns:** 37 (same as Artifacts raw + source data)
+- **Use:** Matching artifact geochemistry to known obsidian sources
+
+### 1.3 Sources
+- **Purpose:** Reference geological obsidian source samples
+- **Rows:** 181 source samples
+- **Columns:** 37
+- **Key samples:** Alca-5 and other regional obsidian sources (IDs: KRA104-KRA105+)
+- **Use:** Establishing geochemical signature baselines for source attribution
+
+### 1.4 Artifacts and sources cal
+- **Purpose:** Calibrated/processed geochemical data
+- **Rows:** 2,597 records
+- **Columns:** 45 (includes calibrated elemental measurements)
+- **Additional columns:** `mn_cal`, `fe_cal`, `th_cal`, `rb_cal`, `sr_cal`, `y_cal`, `zr_cal`, `nb_cal`
+- **Use:** Statistical matching and source attribution with calibrated values
+
+### 1.5 provenience
+- **Purpose:** Archaeological context data linked to XRF analysis
+- **Rows:** 2,386 obsidian samples
+- **Columns:** 10
+- **Key Variables:**
+  - `xrf_no`: XRF analysis file number
+  - `sample_no`: Sample ID (MOQ-001, MOQ-002, etc.)
+  - `unidad`: Excavation unit number (1-8)
+  - `cuad`: Square/grid quadrant
+  - `rasgo`: Feature (e.g., "House Inside")
+  - `nivel`: Excavation level/depth
+  - `excavador`: Excavator name
+  - `fecha`: Date of excavation
+  - `weight (g)`: Sample weight in grams
+  - `notes`: Additional context notes
+
+### 1.6 provenience altered
+- **Purpose:** Updated provenience with artifact classification
+- **Rows:** 2,386 obsidian samples
+- **Columns:** 12 (provenience + 2 new columns)
+- **New Variables:**
+  - `type`: Artifact type classification
+  - `source?`: Preliminary source assignment hypothesis
+- **Difference from 1.5:** Includes artifact type and source predictions
+
+### 1.7 provenience FINAL
+- **Purpose:** Final cleaned provenience dataset
+- **Rows:** 2,146 samples (filtered/quality-checked)
+- **Columns:** 12 (same structure as provenience altered)
+- **Quality status:** Represents final curated dataset for analysis
+- **Use:** Recommended dataset for statistical analyses
+
+### 1.8 UNITS 8A 8B
+- **Purpose:** Focused analysis subset for specific excavation units
+- **Rows:** 109 obsidian samples
+- **Columns:** 12
+- **Units covered:** 8A and 8B (likely House 6 and House 7 areas)
+- **Use:** Specialized spatial analysis of these units
+
+---
+
+# 2. Lithic Analysis
+
+## File Information
+- **Filename:** `lithic_analysis.csv`
+- **Size:** 99 KB
+- **Type:** CSV (comma-separated values)
+- **Content:** Comprehensive lithic (stone tool) analysis with morphological and technological attributes
+
+## Structure
+
+**Rows:** ~300+ stone tool/debitage records
+
+**Columns (25 total):**
+
+| Category | Variables |
+|----------|-----------|
+| **Excavation Context** | `Unidad`, `Cuad`, `Nivel`, `Rasgo`, `Excavador`, `Fecha`, `Context` |
+| **Fragment Information** | `N frag.` (number of fragments), `Tamaño frag.` (fragment size) |
+| **Morphology** | `Length`, `Width`, `Thickness`, `Weight` |
+| **Material** | `Material` (rock type classification) |
+| **Technology** | `Technological Type`, `Debris`, `Platform Type`, `Termination` |
+| **Attributes** | `% Cortex` (cortex percentage), `Portion` (tool portion) |
+| **Modification** | `Modification` (use-wear, retouch) |
+| **Documentation** | `Notes`, `Foto` (photo reference) |
+
+## Key Recording Categories
+
+- **Material types:** Documented rock types used
+- **Technological types:** Classification of reduction sequences
+- **Platform types:** Striking platform morphology
+- **Termination types:** How flakes break (hinge, feather, step)
+- **Cortex coverage:** Original surface percentage on artifacts
+- **Tool portions:** Complete vs. broken tools
+- **Modification status:** Fresh vs. modified/used artifacts
+
+## 2.1 Lithic code equivalences
+
+Below are the numeric codes used in `lithic_analysis.csv`. All descriptions are in English to support programmatic use and clarity.
+
+### Material
+
+| Code | Description |
+|-----:|-------------|
+| 1 | andesite (igneous) |
+| 2 | diorite (igneous) |
+| 3 | rhyolite (igneous) |
+| 4 | slate (metamorphic) |
+| 5 | schist (metamorphic) |
+| 6 | limestone (sedimentary) |
+| 7 | travertine (sedimentary) |
+| 8 | sandstone (sedimentary) |
+| 9 | quartzite (metamorphic) |
+| 10 | chert (sedimentary) |
+| 11 | breccia (mixed) |
+| 12 | jasper (mineral) |
+| 13 | quartz (mineral) |
+| 14 | mica (mineral) |
+| 15 | gypsum (mineral) |
+| 16 | obsidian |
+| 17 | granite |
+
+### Platform type
+
+| Code | Description |
+|-----:|-------------|
+| 0 | not applicable |
+| 1 | plain |
+| 2 | crushed |
+| 3 | faceted |
+| 4 | lipped |
+| 5 | cortex heavy |
+
+### Termination
+
+| Code | Description |
+|-----:|-------------|
+| 0 | broken / not applicable |
+| 1 | feather |
+| 2 | hinge |
+| 3 | step |
+
+### % Cortex
+
+- Values 0 to 10 represent estimated 0% to 100% cortex coverage (for example, 0 = 0%, 5 ≈ 50%, 10 = 100%).
+
+### Portion (flakes and blades)
+
+| Code | Description |
+|-----:|-------------|
+| 0 | not applicable |
+| 1 | complete |
+| 2 | bulb present, distal end absent |
+| 3 | bulb absent, distal end present |
+| 4 | medial segment |
+| 5 | broken (lateral or indeterminate) |
+
+### Dorsal Flake Scars ≥ 3
+
+| Code | Description |
+|-----:|-------------|
+| 0 | not applicable |
+| 1 | less than 3 |
+| 2 | greater than 3 |
+
+### Technological Type
+
+| Code | Description |
+|-----:|-------------|
+| 1 | biface |
+| 1a | lanceolate biface |
+| 1b | side notched biface |
+| 1c | contracting stemmed biface |
+| 1d | basal notched biface |
+| 2 | unimarginal flake tool |
+| 3 | bimarginal flake tool |
+| 4 | combination flake tool |
+| 5 | unmodified core |
+| 6 | core with flakes removed |
+| 7 | core with edge |
+
+### Debris
+
+| Code | Description |
+|-----:|-------------|
+| 1 | proximal flake |
+| 2 | flake shatter |
+| 3 | angular debris |
+
+### Modification
+
+| Code | Description |
+|-----:|-------------|
+| 1 | utilized |
+| 2 | retouched |
+| 3 | notched |
+| 4 | truncated (blade) |
+| 5 | backed |
+
+### Observations
+
+- Free-text notes field for analyst observations and issues.
+
+## 2.2 Column definitions for `lithic_analysis.csv`
+
+Detailed field-level definitions:
+
+- `Unidad` (Unit): Excavation unit where the fragment was recovered.
+- `Cuad` (Quadrant): Quadrant within the unit where the fragment was recovered.
+- `Nivel` (Level): Depth in centimeters where the fragment was recovered.
+- `Rasgo` (Feature): Associated archaeological feature; may be blank if the context is uncertain or no feature is associated.
+- `Excavador` (Excavator): Initials of the person who excavated and found the fragment.
+- `Fecha` (Date): Date of recovery/record.
+- `Context`: **Ignore this field** (not used for analyses).
+- `N frag.` (Number of fragments): Typically 1; values >1 indicate multiple very small fragments studied together.
+- `Tamaño frag.` (Fragment size): Integer representing square size (e.g., 1 = fits within 1×1 cm, 2 = fits within 2×2 cm).
+- `Length`, `Width`, `Thickness`: Measurements in centimeters; recorded only for special/interesting specimens (often blank).
+- `Material`: Material type code — here predominantly obsidian (code 16 in the codebook).
+- `Technological Type`: See the codebook (section 2.1) for numeric-to-description mappings.
+- `Debris`: See codebook; blank indicates the specimen is not classified as debris.
+- `Platform Type`: See codebook; blank indicates no visible platform.
+- `Termination`: See codebook; blank indicates no assessable termination.
+- `% Cortex`: Estimated cortex coverage as a percentage (0–100).
+- `Portion`: Flake/blade portion code (see codebook); may be blank if not assessable.
+- `Modification`: Modification code (see codebook); many entries are blank when not assessable.
+- `Weight`: Weight in grams.
+- `Notes`: Free-text notes field for contextual or analyst comments.
+- `Foto`: Marked with `x` when a photograph was requested or taken.
+
+Notes:
+- Numeric codes referenced above are defined in the "Lithic code equivalences" section (2.1).
+- Missing or blank values indicate unrecorded or unassessable fields; perform cleaning/normalization prior to analysis.
+
+---
+
+# 3. Excavation Features & Contexts
+
+## File Information
+- **Filename:** `2023_muyumoqo fichas - UE5.csv`
+- **Size:** 7.1 KB
+- **Type:** CSV
+- **Content:** Feature-level (ficha) excavation documentation from Unit 5 (UE5)
+
+## Structure
+
+**Rows:** ~80+ feature/context records
+
+**Columns (30 total):**
+
+| Category | Variables |
+|----------|-----------|
+| **Location** | `Unidad`, `Cuad`, `Rasgo` (feature), `Nivel`, `Capa` (layer) |
+| **Sediment Properties** | `Codigo de Munsell`, `Munsell Color`, `Textura` (soil texture) |
+| **Feature Description** | `Rasgos, hallazgos y estructuras` (features, findings & structures) |
+| **Artifact Presence (X/blank)** | `Cerámica`, `Lítica`, `Obsidiana`, `Batán/mortero/mano`, `Hueso animal`, `Hueso humano`, `Restos botánicos`, `Malacológicos`, `Metal`, `Arcilla Quemada`, `Yeso`, `Adobe`, `Otros` |
+| **Sampling** | `Carbon Muestras`, `Suelo Muestras`, `Cantidad total de bolsas` |
+| **Field Metadata** | `Herramientas` (tools), `Otro` (other), `Excavador`, `Fecha`, `Notes` |
+
+## Recording Method
+
+- **Presence indicators:** Marked with "X" if artifact category present in feature
+- **Artifact types:** 13 distinct material categories recorded
+- **Detailed descriptions:** Spanish-language feature descriptions capturing stratigraphy, finds, and interpretations
+- **Special finds:** Noted in `Rasgos, hallazgos y estructuras` column (e.g., diorita verde from Saqsaywaman, worked bone, textiles tools)
+- **Samples:** Distinct carbon and soil samples collected by bag number
+
+## Notable Features Documented
+
+- Wall falls and collapses
+- House interior/exterior deposits
+- Possible guinea pig enclosures (cuyerías)
+- Hearth/fire features (fogón) with ash and charcoal
+- Evidence of textile production (tools, dyes)
+- Foreign materials (Saqsaywaman diorite)
+
+---
+
+# Data Integration Guide
+
+## Cross-referencing Between Datasets
+
+**Obsidian ↔ Lithic Analysis:**
+- Link via: `Unidad`, `Cuad`, `Nivel`, `Rasgo`, `Excavador`, `Fecha`
+- The obsidian `sample_no` (MOQ-###) likely corresponds to collection/bag numbers
+
+**Obsidian ↔ Excavation Features:**
+- Link via: `Unidad`, `Cuad`, `Rasgo` (feature), `Nivel`
+- Features in fichas sheet provide contextual interpretation for artifact assemblages
+
+**Lithic Analysis ↔ Excavation Features:**
+- Link via: `Unidad`, `Cuad`, `Nivel`, `Rasgo`
+- Features document depositional context
+
+---
+
+# Excavation Unit Reference
+
+Based on data:
+
+| Unit | Description | Has Data |
+|------|-------------|----------|
+| 1 | Early excavation area | Obsidian, Lithic |
+| 2 | House feature area | Obsidian, Lithic, Fichas |
+| 4 | General excavation | Lithic |
+| 5 | Main Unit 5 (UE5) | Fichas (specialized) |
+| 8 | Houses 6 & 7 | Obsidian (raw), Lithic |
+| 8A, 8B | Detailed House excavation | Obsidian (final subset) |
+
+---
+
+# Column Name Standards
+
+## Spanish Terminology
+- `Unidad` = Excavation Unit
+- `Cuad` = Quadrant/Square
+- `Rasgo` = Feature (archaeological feature name)
+- `Nivel` = Level/Depth
+- `Capa` = Layer/Stratum
+- `Excavador` = Excavator
+- `Munsell` = Soil color classification system
+- `Textura` = Soil texture
+- `Ficha` = Record card/form
+
+## Abbreviations
+- `MOQ` = Muyumoqo (project/site abbreviation)
+- `XRF` = X-Ray Fluorescence
+- `UE` = Unidad de Excavación (Excavation Unit)
+- `g` = grams
+
+---
+
+# Data Quality Notes
+
+- **Obsidian provenience FINAL:** Recommended for statistical work (filtered to 2,146 records)
+- **Inconsistent spacing:** Some cells have leading/trailing spaces; clean before analysis
+- **Missing values:** Represented as empty cells or "N/A"
+- **Date formats:** Multiple formats observed (DD-MM-YY and YYYY-MM-DD)
+- **Spanish text:** Free-form notes contain archaeological interpretations in Spanish
+
+---
+
+# Recommended Next Steps for Analysis
+
+1. **Obsidian sourcing analysis:** Use calibrated elemental data (`*_cal` columns) with geochemical matching
+2. **Spatial distribution:** Map artifact distributions across units and features
+3. **Temporal sequencing:** Cross-reference stratigraphic levels with carbon dating
+4. **Assemblage composition:** Compare lithic vs. obsidian frequencies by feature
+5. **House space use:** Specialized analysis of Units 8A/8B for domestic activities
+

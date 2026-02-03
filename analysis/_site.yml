@@ -9,6 +9,8 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  - text: Data Inventory
+    href: data_inventory.html
 output:
   workflowr::wflow_html:
     toc: yes
