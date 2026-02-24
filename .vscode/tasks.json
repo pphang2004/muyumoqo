@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run 3D PCA",
+			"type": "shell",
+			"command": "/Library/Frameworks/R.framework/Resources/bin/Rscript code/quick_pca_3d.R",
+			"problemMatcher": []
+		}
+	]
+}

@@ -26,82 +26,62 @@ library(knitr)
 # 1. Obsidian Geochemical Analysis
 
 ## File Information
-- **Filename:** `obsidian_data_26.xlsx`
-- **Size:** 1.2 MB
-- **Type:** Multi-sheet Excel workbook
-- **Content:** XRF (X-Ray Fluorescence) geochemical analysis of obsidian artifacts and source samples
+- **Filename:** `obsidian_new_info.xlsx`
+- **Size:** 638 KB
+- **Type:** Multi-sheet Excel workbook (2 sheets)
+- **Content:** XRF (X-Ray Fluorescence) geochemical analysis data and archaeological provenience for obsidian artifacts
 
 ## Sheet Descriptions
 
-### 1.1 Artifacts raw
-- **Purpose:** Raw XRF analysis data for obsidian artifacts from the site
-- **Rows:** 326 artifacts
-- **Columns:** 37 (analysis parameters + elemental composition data)
+### 1.1 cal_obsidian
+- **Purpose:** Calibrated XRF geochemical data for obsidian artifacts and geological sources
+- **Rows:** 2,597 samples
+- **Columns:** 31
 - **Key Variables:**
-  - `File #`, `Name` (Muyumoqo), `ID`: Artifact identification
-  - `DateTime`, `Operator`: Analysis metadata
-  - `Alloy 1/2/3`, `Match Qual 1/2/3`: Geochemical matching to sources
-  - Elemental composition with error values: `Mn`, `Fe`, `Zn`, `Ga`, `Rb`, `Sr`, `Y`, `Zr`, `Nb`, `Th`
-- **Purpose:** Elemental fingerprinting for source provenance determination
+  - `File`: XRF analysis file identifier (e.g., "01413-Obsidian"); links to `xrf_no` in location_obsidian
+  - `Name`: Sample classification
+    - **"Muyumoqo"** = Archaeological artifacts from the site (unknown provenance)
+    - **Other names** (e.g., "Alca-5") = Known geological obsidian sources
+  - **Elemental composition (ppm) with error values:**
+    - `Mn`, `Mn Err`: Manganese
+    - `Fe`, `Fe Err`: Iron
+    - `Zn`, `Zn Err`: Zinc
+    - `Ga`, `Ga Err`: Gallium
+    - `Rb`, `Rb Err`: Rubidium
+    - `Sr`, `Sr Err`: Strontium
+    - `Y`, `Y Err`: Yttrium
+    - `Zr`, `Zr Err`: Zirconium
+    - `Nb`, `Nb Err`: Niobium
+    - `Th`, `Th Err`: Thorium
+- **Use:** Statistical matching of Muyumoqo artifacts to known geological sources based on elemental fingerprints
 
-### 1.2 Artifacts and sources
-- **Purpose:** Combined dataset with artifacts and geological source samples
-- **Rows:** 897 samples
-- **Columns:** 37 (same as Artifacts raw + source data)
-- **Use:** Matching artifact geochemistry to known obsidian sources
-
-### 1.3 Sources
-- **Purpose:** Reference geological obsidian source samples
-- **Rows:** 181 source samples
-- **Columns:** 37
-- **Key samples:** Alca-5 and other regional obsidian sources (IDs: KRA104-KRA105+)
-- **Use:** Establishing geochemical signature baselines for source attribution
-
-### 1.4 Artifacts and sources cal
-- **Purpose:** Calibrated/processed geochemical data
-- **Rows:** 2,597 records
-- **Columns:** 45 (includes calibrated elemental measurements)
-- **Additional columns:** `mn_cal`, `fe_cal`, `th_cal`, `rb_cal`, `sr_cal`, `y_cal`, `zr_cal`, `nb_cal`
-- **Use:** Statistical matching and source attribution with calibrated values
-
-### 1.5 provenience
-- **Purpose:** Archaeological context data linked to XRF analysis
-- **Rows:** 2,386 obsidian samples
+### 1.2 location_obsidian
+- **Purpose:** Archaeological context and provenience data for obsidian samples
+- **Rows:** 2,146 samples (final curated dataset)
 - **Columns:** 10
 - **Key Variables:**
-  - `xrf_no`: XRF analysis file number
+  - `xrf_no`: XRF analysis file number (links to `File` in cal_obsidian)
   - `sample_no`: Sample ID (MOQ-001, MOQ-002, etc.)
-  - `unidad`: Excavation unit number (1-8)
+  - `unidad`: Excavation unit number
   - `cuad`: Square/grid quadrant
-  - `rasgo`: Feature (e.g., "House Inside")
-  - `nivel`: Excavation level/depth
-  - `excavador`: Excavator name
-  - `fecha`: Date of excavation
+  - `rasgo`: Associated archaeological feature — **treat as nominal/categorical** (each value represents a specific architectural feature; not sequential)
+  - `nivel`: Depth values — **treat as nominal/categorical for now** (recorded in centimeters but not uniform/standardized; use as grouping variable rather than continuous depth)
+  - `excavador`: Excavator initials
+  - `fecha`: Date of excavation (format: DD-MM-YYYY)
   - `weight (g)`: Sample weight in grams
-  - `notes`: Additional context notes
+  - `notes`: Contextual notes about recovery
+- **Use:** Link geochemical data to spatial and stratigraphic context for distributional analyses
 
-### 1.6 provenience altered
-- **Purpose:** Updated provenience with artifact classification
-- **Rows:** 2,386 obsidian samples
-- **Columns:** 12 (provenience + 2 new columns)
-- **New Variables:**
-  - `type`: Artifact type classification
-  - `source?`: Preliminary source assignment hypothesis
-- **Difference from 1.5:** Includes artifact type and source predictions
+## Data Integration
 
-### 1.7 provenience FINAL
-- **Purpose:** Final cleaned provenience dataset
-- **Rows:** 2,146 samples (filtered/quality-checked)
-- **Columns:** 12 (same structure as provenience altered)
-- **Quality status:** Represents final curated dataset for analysis
-- **Use:** Recommended dataset for statistical analyses
-
-### 1.8 UNITS 8A 8B
-- **Purpose:** Focused analysis subset for specific excavation units
-- **Rows:** 109 obsidian samples
-- **Columns:** 12
-- **Units covered:** 8A and 8B (likely House 6 and House 7 areas)
-- **Use:** Specialized spatial analysis of these units
+To analyze obsidian sourcing with context:
+- **Join key:** `File` (cal_obsidian) = `xrf_no` (location_obsidian)
+- This links elemental composition to spatial and stratigraphic context
+- **Workflow:**
+  1. Filter `cal_obsidian` where `Name = "Muyumoqo"` to get artifacts
+  2. Filter `cal_obsidian` where `Name != "Muyumoqo"` to get geological sources
+  3. Join artifacts with `location_obsidian` for spatial context
+  4. Use statistical methods (e.g., discriminant analysis, PCA) to match artifacts to sources
 
 ---
 
