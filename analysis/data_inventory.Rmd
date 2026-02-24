@@ -25,9 +25,10 @@ library(knitr)
 
 # 1. Obsidian Geochemical Analysis
 
+All data files are in data subfolder
+
 ## File Information
 - **Filename:** `obsidian_new_info.xlsx`
-- **Size:** 638 KB
 - **Type:** Multi-sheet Excel workbook (2 sheets)
 - **Content:** XRF (X-Ray Fluorescence) geochemical analysis data and archaeological provenience for obsidian artifacts
 
@@ -262,8 +263,7 @@ Notes:
 # 3. Excavation Features & Contexts
 
 ## File Information
-- **Filename:** `2023_muyumoqo fichas - UE5.csv`
-- **Size:** 7.1 KB
+- **Filename:** `muyumoqo_fichas_guide.csv`
 - **Type:** CSV
 - **Content:** Feature-level (ficha) excavation documentation from Unit 5 (UE5)
 
@@ -307,7 +307,7 @@ Notes:
 
 **Obsidian ↔ Lithic Analysis:**
 - Link via: `Unidad`, `Cuad`, `Nivel`, `Rasgo`, `Excavador`, `Fecha`
-- The obsidian `sample_no` (MOQ-###) likely corresponds to collection/bag numbers
+- The obsidian `sample_no` (MOQ-###) does correspond to collection/bag numbers
 
 **Obsidian ↔ Excavation Features:**
 - Link via: `Unidad`, `Cuad`, `Rasgo` (feature), `Nivel`

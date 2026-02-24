@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Inventory &amp; Structure</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+<li>
+  <a href="data_inventory.html">Data Inventory</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Data Inventory &amp; Structure</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-02-24
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Archaeology/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260127code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260127)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260127code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260127)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcompphang2004muyumoqotreef9c84aa32402f648626124d1bc07c606696107f7targetblankf9c84aaa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/pphang2004/muyumoqo/tree/f9c84aa32402f648626124d1bc07c606696107f7" target="_blank">f9c84aa</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcompphang2004muyumoqotreef9c84aa32402f648626124d1bc07c606696107f7targetblankf9c84aaa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/pphang2004/muyumoqo/tree/f9c84aa32402f648626124d1bc07c606696107f7" target="_blank">f9c84aa</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+
+Untracked files:
+    Untracked:  data/muyumoqo_fichas_guide.csv
+    Untracked:  data/obsidian_new_info.xlsx
+
+Unstaged changes:
+    Modified:   .DS_Store
+    Deleted:    2023_muyumoqo fichas - UE5.csv
+    Modified:   analysis/data_inventory.Rmd
+    Deleted:    data.Rproj
+    Modified:   data/README.md
+    Deleted:    data/lithic_analysis_enhanced.csv
+    Deleted:    obsidian_data_26.xlsx
+    Deleted:    obsidian_new_info.xlsx
+    Modified:   renv.lock
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/data_inventory.Rmd</code>) and
+HTML (<code>docs/data_inventory.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/pphang2004/muyumoqo/blob/f9c84aa32402f648626124d1bc07c606696107f7/analysis/data_inventory.Rmd" target="_blank">f9c84aa</a>
+</td>
+<td>
+Patrick
+</td>
+<td>
+2026-02-24
+</td>
+<td>
+Added new excel file into RMD
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/pphang2004/muyumoqo/blob/fe730cb8565b712bf945e1dd35c9f38702129a93/analysis/data_inventory.Rmd" target="_blank">fe730cb</a>
+</td>
+<td>
+Patrick
+</td>
+<td>
+2026-02-03
+</td>
+<td>
+Moved scripting files and updated data
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>This document provides a comprehensive inventory of all data files in
+the Muyumoqo Archaeological Project, including their structure,
+categories, and sample records. This reference ensures consistent data
+understanding across all analyses and collaborations.</p>
+<hr />
+</div>
+<div id="obsidian-geochemical-analysis" class="section level1">
+<h1>1. Obsidian Geochemical Analysis</h1>
+<p>All data files are in data subfolder</p>
+<div id="file-information" class="section level2">
+<h2>File Information</h2>
+<ul>
+<li><strong>Filename:</strong> <code>obsidian_new_info.xlsx</code></li>
+<li><strong>Type:</strong> Multi-sheet Excel workbook (2 sheets)</li>
+<li><strong>Content:</strong> XRF (X-Ray Fluorescence) geochemical
+analysis data and archaeological provenience for obsidian artifacts</li>
+</ul>
+</div>
+<div id="sheet-descriptions" class="section level2">
+<h2>Sheet Descriptions</h2>
+<div id="cal_obsidian" class="section level3">
+<h3>1.1 cal_obsidian</h3>
+<ul>
+<li><strong>Purpose:</strong> Calibrated XRF geochemical data for
+obsidian artifacts and geological sources</li>
+<li><strong>Rows:</strong> 2,597 samples</li>
+<li><strong>Columns:</strong> 31</li>
+<li><strong>Key Variables:</strong>
+<ul>
+<li><code>File</code>: XRF analysis file identifier (e.g.,
+“01413-Obsidian”); links to <code>xrf_no</code> in
+location_obsidian</li>
+<li><code>Name</code>: Sample classification
+<ul>
+<li><strong>“Muyumoqo”</strong> = Archaeological artifacts from the site
+(unknown provenance)</li>
+<li><strong>Other names</strong> (e.g., “Alca-5”) = Known geological
+obsidian sources</li>
+</ul></li>
+<li><strong>Elemental composition (ppm) with error values:</strong>
+<ul>
+<li><code>Mn</code>, <code>Mn Err</code>: Manganese</li>
+<li><code>Fe</code>, <code>Fe Err</code>: Iron</li>
+<li><code>Zn</code>, <code>Zn Err</code>: Zinc</li>
+<li><code>Ga</code>, <code>Ga Err</code>: Gallium</li>
+<li><code>Rb</code>, <code>Rb Err</code>: Rubidium</li>
+<li><code>Sr</code>, <code>Sr Err</code>: Strontium</li>
+<li><code>Y</code>, <code>Y Err</code>: Yttrium</li>
+<li><code>Zr</code>, <code>Zr Err</code>: Zirconium</li>
+<li><code>Nb</code>, <code>Nb Err</code>: Niobium</li>
+<li><code>Th</code>, <code>Th Err</code>: Thorium</li>
+</ul></li>
+</ul></li>
+<li><strong>Use:</strong> Statistical matching of Muyumoqo artifacts to
+known geological sources based on elemental fingerprints</li>
+</ul>
+</div>
+<div id="location_obsidian" class="section level3">
+<h3>1.2 location_obsidian</h3>
+<ul>
+<li><strong>Purpose:</strong> Archaeological context and provenience
+data for obsidian samples</li>
+<li><strong>Rows:</strong> 2,146 samples (final curated dataset)</li>
+<li><strong>Columns:</strong> 10</li>
+<li><strong>Key Variables:</strong>
+<ul>
+<li><code>xrf_no</code>: XRF analysis file number (links to
+<code>File</code> in cal_obsidian)</li>
+<li><code>sample_no</code>: Sample ID (MOQ-001, MOQ-002, etc.)</li>
+<li><code>unidad</code>: Excavation unit number</li>
+<li><code>cuad</code>: Square/grid quadrant</li>
+<li><code>rasgo</code>: Associated archaeological feature —
+<strong>treat as nominal/categorical</strong> (each value represents a
+specific architectural feature; not sequential)</li>
+<li><code>nivel</code>: Depth values — <strong>treat as
+nominal/categorical for now</strong> (recorded in centimeters but not
+uniform/standardized; use as grouping variable rather than continuous
+depth)</li>
+<li><code>excavador</code>: Excavator initials</li>
+<li><code>fecha</code>: Date of excavation (format: DD-MM-YYYY)</li>
+<li><code>weight (g)</code>: Sample weight in grams</li>
+<li><code>notes</code>: Contextual notes about recovery</li>
+</ul></li>
+<li><strong>Use:</strong> Link geochemical data to spatial and
+stratigraphic context for distributional analyses</li>
+</ul>
+</div>
+</div>
+<div id="data-integration" class="section level2">
+<h2>Data Integration</h2>
+<p>To analyze obsidian sourcing with context: - <strong>Join
+key:</strong> <code>File</code> (cal_obsidian) = <code>xrf_no</code>
+(location_obsidian) - This links elemental composition to spatial and
+stratigraphic context - <strong>Workflow:</strong> 1. Filter
+<code>cal_obsidian</code> where <code>Name = "Muyumoqo"</code> to get
+artifacts 2. Filter <code>cal_obsidian</code> where
+<code>Name != "Muyumoqo"</code> to get geological sources 3. Join
+artifacts with <code>location_obsidian</code> for spatial context 4. Use
+statistical methods (e.g., discriminant analysis, PCA) to match
+artifacts to sources</p>
+<hr />
+</div>
+</div>
+<div id="lithic-analysis" class="section level1">
+<h1>2. Lithic Analysis</h1>
+<div id="file-information-1" class="section level2">
+<h2>File Information</h2>
+<ul>
+<li><strong>Filename:</strong> <code>lithic_analysis.csv</code></li>
+<li><strong>Size:</strong> 99 KB</li>
+<li><strong>Type:</strong> CSV (comma-separated values)</li>
+<li><strong>Content:</strong> Comprehensive lithic (stone tool) analysis
+with morphological and technological attributes</li>
+</ul>
+</div>
+<div id="structure" class="section level2">
+<h2>Structure</h2>
+<p><strong>Rows:</strong> ~300+ stone tool/debitage records</p>
+<p><strong>Columns (25 total):</strong></p>
+<table>
+<colgroup>
+<col width="47%" />
+<col width="52%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Excavation Context</strong></td>
+<td><code>Unidad</code>, <code>Cuad</code>, <code>Nivel</code>,
+<code>Rasgo</code>, <code>Excavador</code>, <code>Fecha</code>,
+<code>Context</code></td>
+</tr>
+<tr class="even">
+<td><strong>Fragment Information</strong></td>
+<td><code>N frag.</code> (number of fragments),
+<code>Tamaño frag.</code> (fragment size)</td>
+</tr>
+<tr class="odd">
+<td><strong>Morphology</strong></td>
+<td><code>Length</code>, <code>Width</code>, <code>Thickness</code>,
+<code>Weight</code></td>
+</tr>
+<tr class="even">
+<td><strong>Material</strong></td>
+<td><code>Material</code> (rock type classification)</td>
+</tr>
+<tr class="odd">
+<td><strong>Technology</strong></td>
+<td><code>Technological Type</code>, <code>Debris</code>,
+<code>Platform Type</code>, <code>Termination</code></td>
+</tr>
+<tr class="even">
+<td><strong>Attributes</strong></td>
+<td><code>% Cortex</code> (cortex percentage), <code>Portion</code>
+(tool portion)</td>
+</tr>
+<tr class="odd">
+<td><strong>Modification</strong></td>
+<td><code>Modification</code> (use-wear, retouch)</td>
+</tr>
+<tr class="even">
+<td><strong>Documentation</strong></td>
+<td><code>Notes</code>, <code>Foto</code> (photo reference)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="key-recording-categories" class="section level2">
+<h2>Key Recording Categories</h2>
+<ul>
+<li><strong>Material types:</strong> Documented rock types used</li>
+<li><strong>Technological types:</strong> Classification of reduction
+sequences</li>
+<li><strong>Platform types:</strong> Striking platform morphology</li>
+<li><strong>Termination types:</strong> How flakes break (hinge,
+feather, step)</li>
+<li><strong>Cortex coverage:</strong> Original surface percentage on
+artifacts</li>
+<li><strong>Tool portions:</strong> Complete vs. broken tools</li>
+<li><strong>Modification status:</strong> Fresh vs. modified/used
+artifacts</li>
+</ul>
+</div>
+<div id="lithic-code-equivalences" class="section level2">
+<h2>2.1 Lithic code equivalences</h2>
+<p>Below are the numeric codes used in <code>lithic_analysis.csv</code>.
+All descriptions are in English to support programmatic use and
+clarity.</p>
+<div id="material" class="section level3">
+<h3>Material</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td>andesite (igneous)</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td>diorite (igneous)</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td>rhyolite (igneous)</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td>slate (metamorphic)</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td>schist (metamorphic)</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td>limestone (sedimentary)</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td>travertine (sedimentary)</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td>sandstone (sedimentary)</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td>quartzite (metamorphic)</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td>chert (sedimentary)</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td>breccia (mixed)</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td>jasper (mineral)</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td>quartz (mineral)</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td>mica (mineral)</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td>gypsum (mineral)</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td>obsidian</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td>granite</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="platform-type" class="section level3">
+<h3>Platform type</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td>not applicable</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td>plain</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td>crushed</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td>faceted</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td>lipped</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td>cortex heavy</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="termination" class="section level3">
+<h3>Termination</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td>broken / not applicable</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td>feather</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td>hinge</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td>step</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cortex" class="section level3">
+<h3>% Cortex</h3>
+<ul>
+<li>Values 0 to 10 represent estimated 0% to 100% cortex coverage (for
+example, 0 = 0%, 5 ≈ 50%, 10 = 100%).</li>
+</ul>
+</div>
+<div id="portion-flakes-and-blades" class="section level3">
+<h3>Portion (flakes and blades)</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td>not applicable</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td>complete</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td>bulb present, distal end absent</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td>bulb absent, distal end present</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td>medial segment</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td>broken (lateral or indeterminate)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dorsal-flake-scars-3" class="section level3">
+<h3>Dorsal Flake Scars ≥ 3</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td>not applicable</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td>less than 3</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td>greater than 3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="technological-type" class="section level3">
+<h3>Technological Type</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td>biface</td>
+</tr>
+<tr class="even">
+<td align="right">1a</td>
+<td>lanceolate biface</td>
+</tr>
+<tr class="odd">
+<td align="right">1b</td>
+<td>side notched biface</td>
+</tr>
+<tr class="even">
+<td align="right">1c</td>
+<td>contracting stemmed biface</td>
+</tr>
+<tr class="odd">
+<td align="right">1d</td>
+<td>basal notched biface</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td>unimarginal flake tool</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td>bimarginal flake tool</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td>combination flake tool</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td>unmodified core</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td>core with flakes removed</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td>core with edge</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="debris" class="section level3">
+<h3>Debris</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td>proximal flake</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td>flake shatter</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td>angular debris</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="modification" class="section level3">
+<h3>Modification</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td>utilized</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td>retouched</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td>notched</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td>truncated (blade)</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td>backed</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="observations" class="section level3">
+<h3>Observations</h3>
+<ul>
+<li>Free-text notes field for analyst observations and issues.</li>
+</ul>
+</div>
+</div>
+<div id="column-definitions-for-lithic_analysis.csv"
+class="section level2">
+<h2>2.2 Column definitions for <code>lithic_analysis.csv</code></h2>
+<p>Detailed field-level definitions:</p>
+<ul>
+<li><code>Unidad</code> (Unit): Excavation unit where the fragment was
+recovered.</li>
+<li><code>Cuad</code> (Quadrant): Quadrant within the unit where the
+fragment was recovered.</li>
+<li><code>Nivel</code> (Level): Depth in centimeters where the fragment
+was recovered.</li>
+<li><code>Rasgo</code> (Feature): Associated archaeological feature; may
+be blank if the context is uncertain or no feature is associated.</li>
+<li><code>Excavador</code> (Excavator): Initials of the person who
+excavated and found the fragment.</li>
+<li><code>Fecha</code> (Date): Date of recovery/record.</li>
+<li><code>Context</code>: <strong>Ignore this field</strong> (not used
+for analyses).</li>
+<li><code>N frag.</code> (Number of fragments): Typically 1; values
+&gt;1 indicate multiple very small fragments studied together.</li>
+<li><code>Tamaño frag.</code> (Fragment size): Integer representing
+square size (e.g., 1 = fits within 1×1 cm, 2 = fits within 2×2 cm).</li>
+<li><code>Length</code>, <code>Width</code>, <code>Thickness</code>:
+Measurements in centimeters; recorded only for special/interesting
+specimens (often blank).</li>
+<li><code>Material</code>: Material type code — here predominantly
+obsidian (code 16 in the codebook).</li>
+<li><code>Technological Type</code>: See the codebook (section 2.1) for
+numeric-to-description mappings.</li>
+<li><code>Debris</code>: See codebook; blank indicates the specimen is
+not classified as debris.</li>
+<li><code>Platform Type</code>: See codebook; blank indicates no visible
+platform.</li>
+<li><code>Termination</code>: See codebook; blank indicates no
+assessable termination.</li>
+<li><code>% Cortex</code>: Estimated cortex coverage as a percentage
+(0–100).</li>
+<li><code>Portion</code>: Flake/blade portion code (see codebook); may
+be blank if not assessable.</li>
+<li><code>Modification</code>: Modification code (see codebook); many
+entries are blank when not assessable.</li>
+<li><code>Weight</code>: Weight in grams.</li>
+<li><code>Notes</code>: Free-text notes field for contextual or analyst
+comments.</li>
+<li><code>Foto</code>: Marked with <code>x</code> when a photograph was
+requested or taken.</li>
+</ul>
+<p>Notes: - Numeric codes referenced above are defined in the “Lithic
+code equivalences” section (2.1). - Missing or blank values indicate
+unrecorded or unassessable fields; perform cleaning/normalization prior
+to analysis.</p>
+<hr />
+</div>
+</div>
+<div id="excavation-features-contexts" class="section level1">
+<h1>3. Excavation Features &amp; Contexts</h1>
+<div id="file-information-2" class="section level2">
+<h2>File Information</h2>
+<ul>
+<li><strong>Filename:</strong>
+<code>muyumoqo_fichas_guide.csv</code></li>
+<li><strong>Type:</strong> CSV</li>
+<li><strong>Content:</strong> Feature-level (ficha) excavation
+documentation from Unit 5 (UE5)</li>
+</ul>
+</div>
+<div id="structure-1" class="section level2">
+<h2>Structure</h2>
+<p><strong>Rows:</strong> ~80+ feature/context records</p>
+<p><strong>Columns (30 total):</strong></p>
+<table>
+<colgroup>
+<col width="47%" />
+<col width="52%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Location</strong></td>
+<td><code>Unidad</code>, <code>Cuad</code>, <code>Rasgo</code>
+(feature), <code>Nivel</code>, <code>Capa</code> (layer)</td>
+</tr>
+<tr class="even">
+<td><strong>Sediment Properties</strong></td>
+<td><code>Codigo de Munsell</code>, <code>Munsell Color</code>,
+<code>Textura</code> (soil texture)</td>
+</tr>
+<tr class="odd">
+<td><strong>Feature Description</strong></td>
+<td><code>Rasgos, hallazgos y estructuras</code> (features, findings
+&amp; structures)</td>
+</tr>
+<tr class="even">
+<td><strong>Artifact Presence (X/blank)</strong></td>
+<td><code>Cerámica</code>, <code>Lítica</code>, <code>Obsidiana</code>,
+<code>Batán/mortero/mano</code>, <code>Hueso animal</code>,
+<code>Hueso humano</code>, <code>Restos botánicos</code>,
+<code>Malacológicos</code>, <code>Metal</code>,
+<code>Arcilla Quemada</code>, <code>Yeso</code>, <code>Adobe</code>,
+<code>Otros</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Sampling</strong></td>
+<td><code>Carbon Muestras</code>, <code>Suelo Muestras</code>,
+<code>Cantidad total de bolsas</code></td>
+</tr>
+<tr class="even">
+<td><strong>Field Metadata</strong></td>
+<td><code>Herramientas</code> (tools), <code>Otro</code> (other),
+<code>Excavador</code>, <code>Fecha</code>, <code>Notes</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="recording-method" class="section level2">
+<h2>Recording Method</h2>
+<ul>
+<li><strong>Presence indicators:</strong> Marked with “X” if artifact
+category present in feature</li>
+<li><strong>Artifact types:</strong> 13 distinct material categories
+recorded</li>
+<li><strong>Detailed descriptions:</strong> Spanish-language feature
+descriptions capturing stratigraphy, finds, and interpretations</li>
+<li><strong>Special finds:</strong> Noted in
+<code>Rasgos, hallazgos y estructuras</code> column (e.g., diorita verde
+from Saqsaywaman, worked bone, textiles tools)</li>
+<li><strong>Samples:</strong> Distinct carbon and soil samples collected
+by bag number</li>
+</ul>
+</div>
+<div id="notable-features-documented" class="section level2">
+<h2>Notable Features Documented</h2>
+<ul>
+<li>Wall falls and collapses</li>
+<li>House interior/exterior deposits</li>
+<li>Possible guinea pig enclosures (cuyerías)</li>
+<li>Hearth/fire features (fogón) with ash and charcoal</li>
+<li>Evidence of textile production (tools, dyes)</li>
+<li>Foreign materials (Saqsaywaman diorite)</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="data-integration-guide" class="section level1">
+<h1>Data Integration Guide</h1>
+<div id="cross-referencing-between-datasets" class="section level2">
+<h2>Cross-referencing Between Datasets</h2>
+<p><strong>Obsidian ↔︎ Lithic Analysis:</strong> - Link via:
+<code>Unidad</code>, <code>Cuad</code>, <code>Nivel</code>,
+<code>Rasgo</code>, <code>Excavador</code>, <code>Fecha</code> - The
+obsidian <code>sample_no</code> (MOQ-###) does correspond to
+collection/bag numbers</p>
+<p><strong>Obsidian ↔︎ Excavation Features:</strong> - Link via:
+<code>Unidad</code>, <code>Cuad</code>, <code>Rasgo</code> (feature),
+<code>Nivel</code> - Features in fichas sheet provide contextual
+interpretation for artifact assemblages</p>
+<p><strong>Lithic Analysis ↔︎ Excavation Features:</strong> - Link via:
+<code>Unidad</code>, <code>Cuad</code>, <code>Nivel</code>,
+<code>Rasgo</code> - Features document depositional context</p>
+<hr />
+</div>
+</div>
+<div id="excavation-unit-reference" class="section level1">
+<h1>Excavation Unit Reference</h1>
+<p>Based on data:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Unit</th>
+<th>Description</th>
+<th>Has Data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Early excavation area</td>
+<td>Obsidian, Lithic</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>House feature area</td>
+<td>Obsidian, Lithic, Fichas</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>General excavation</td>
+<td>Lithic</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Main Unit 5 (UE5)</td>
+<td>Fichas (specialized)</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Houses 6 &amp; 7</td>
+<td>Obsidian (raw), Lithic</td>
+</tr>
+<tr class="even">
+<td>8A, 8B</td>
+<td>Detailed House excavation</td>
+<td>Obsidian (final subset)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="column-name-standards" class="section level1">
+<h1>Column Name Standards</h1>
+<div id="spanish-terminology" class="section level2">
+<h2>Spanish Terminology</h2>
+<ul>
+<li><code>Unidad</code> = Excavation Unit</li>
+<li><code>Cuad</code> = Quadrant/Square</li>
+<li><code>Rasgo</code> = Feature (archaeological feature name)</li>
+<li><code>Nivel</code> = Level/Depth</li>
+<li><code>Capa</code> = Layer/Stratum</li>
+<li><code>Excavador</code> = Excavator</li>
+<li><code>Munsell</code> = Soil color classification system</li>
+<li><code>Textura</code> = Soil texture</li>
+<li><code>Ficha</code> = Record card/form</li>
+</ul>
+</div>
+<div id="abbreviations" class="section level2">
+<h2>Abbreviations</h2>
+<ul>
+<li><code>MOQ</code> = Muyumoqo (project/site abbreviation)</li>
+<li><code>XRF</code> = X-Ray Fluorescence</li>
+<li><code>UE</code> = Unidad de Excavación (Excavation Unit)</li>
+<li><code>g</code> = grams</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="data-quality-notes" class="section level1">
+<h1>Data Quality Notes</h1>
+<ul>
+<li><strong>Obsidian provenience FINAL:</strong> Recommended for
+statistical work (filtered to 2,146 records)</li>
+<li><strong>Inconsistent spacing:</strong> Some cells have
+leading/trailing spaces; clean before analysis</li>
+<li><strong>Missing values:</strong> Represented as empty cells or
+“N/A”</li>
+<li><strong>Date formats:</strong> Multiple formats observed (DD-MM-YY
+and YYYY-MM-DD)</li>
+<li><strong>Spanish text:</strong> Free-form notes contain
+archaeological interpretations in Spanish</li>
+</ul>
+<hr />
+</div>
+<div id="recommended-next-steps-for-analysis" class="section level1">
+<h1>Recommended Next Steps for Analysis</h1>
+<ol style="list-style-type: decimal">
+<li><strong>Obsidian sourcing analysis:</strong> Use calibrated
+elemental data (<code>*_cal</code> columns) with geochemical
+matching</li>
+<li><strong>Spatial distribution:</strong> Map artifact distributions
+across units and features</li>
+<li><strong>Temporal sequencing:</strong> Cross-reference stratigraphic
+levels with carbon dating</li>
+<li><strong>Assemblage composition:</strong> Compare lithic vs. obsidian
+frequencies by feature</li>
+<li><strong>House space use:</strong> Specialized analysis of Units
+8A/8B for domestic activities</li>
+</ol>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre><code>R version 4.5.2 (2025-10-31)
+Platform: aarch64-apple-darwin20
+Running under: macOS Monterey 12.3
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Detroit
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+[1] knitr_1.50   dplyr_1.2.0  readr_2.1.6  readxl_1.4.5
+
+loaded via a namespace (and not attached):
+ [1] jsonlite_2.0.0    compiler_4.5.2    renv_1.1.4        promises_1.3.3   
+ [5] tidyselect_1.2.1  Rcpp_1.1.0        stringr_1.5.1     git2r_0.36.2     
+ [9] later_1.4.2       jquerylib_0.1.4   yaml_2.3.10       fastmap_1.2.0    
+[13] R6_2.6.1          generics_0.1.4    workflowr_1.7.1   tibble_3.3.1     
+[17] rprojroot_2.0.4   bslib_0.9.0       pillar_1.11.1     tzdb_0.5.0       
+[21] rlang_1.1.7       cachem_1.1.0      stringi_1.8.7     httpuv_1.6.16    
+[25] xfun_0.52         fs_1.6.6          sass_0.4.10       cli_3.6.5        
+[29] magrittr_2.0.3    digest_0.6.37     hms_1.1.4         lifecycle_1.0.5  
+[33] vctrs_0.7.1       evaluate_1.0.4    glue_1.8.0        whisker_0.4.1    
+[37] cellranger_1.1.0  rmarkdown_2.29    tools_4.5.2       pkgconfig_2.0.3  
+[41] htmltools_0.5.8.1</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
